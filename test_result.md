@@ -101,3 +101,169 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+
+user_problem_statement: "Test the VENTANILLA RECICLA CONTIGO API backend to ensure all endpoints are working correctly"
+
+backend:
+  - task: "User Registration API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ POST /api/usuarios endpoint working correctly. Successfully creates users with proper validation, returns JWT token and user details. Duplicate email prevention working."
+
+  - task: "User Login API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ POST /api/login endpoint working correctly. Validates credentials, returns JWT token and user details. Invalid login rejection working properly."
+
+  - task: "Get User Details API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ GET /api/usuarios/{user_id} endpoint working correctly. Returns complete user profile with points, reports count, and achievements."
+
+  - task: "Create Environmental Report API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ POST /api/reportes endpoint working correctly. Accepts environmental reports with description, photo, location data. Returns report ID and points awarded."
+
+  - task: "Get User Reports API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ GET /api/reportes/{usuario_id} endpoint working correctly. Returns list of reports (currently returns all reports, not filtered by user)."
+
+  - task: "Get Available Incentives API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ GET /api/incentivos endpoint working correctly. Returns list of available incentives with proper structure (id, name, description, points required, category)."
+
+  - task: "Redeem Incentive API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ POST /api/canjear endpoint working correctly. Accepts incentive redemption requests and returns confirmation with timestamp."
+
+  - task: "Get Environmental Education Content API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ GET /api/educacion endpoint working correctly. Returns educational content with proper structure (id, title, type, content, category)."
+
+  - task: "Get Environmental News API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ GET /api/noticias endpoint working correctly. Returns environmental news with proper structure (id, title, content, date, category)."
+
+  - task: "Get User Ranking API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ GET /api/ranking endpoint working correctly. Returns user ranking with position, name, and points."
+
+  - task: "Get User Notifications API"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "low"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ GET /api/notificaciones/{usuario_id} endpoint working correctly. Returns user notifications with proper structure."
+
+  - task: "MongoDB Database Connection"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ MongoDB connection working correctly. Data persistence verified through user creation and retrieval tests."
+
+frontend:
+  # No frontend testing performed as per instructions
+
+metadata:
+  created_by: "testing_agent"
+  version: "1.0"
+  test_sequence: 1
+  run_ui: false
+
+test_plan:
+  current_focus: []
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "testing"
+    message: "Backend API testing completed successfully. All 12 backend endpoints tested and working correctly. MongoDB connection verified. All authentication, reports, incentives, education, and news endpoints functioning as expected with proper data validation and response formats. Used realistic data for Ventanilla, Lima, Peru recycling context."
