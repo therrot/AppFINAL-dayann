@@ -1,258 +1,398 @@
-import React from "react";
-import { 
-  Text, 
-  View, 
-  StyleSheet, 
+import React, { useEffect, useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
   SafeAreaView,
-  TouchableOpacity,
-  ScrollView
-} from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+  ImageBackground,
+  TouchableOpacity
+} from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
+import { router } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Index() {
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
+
+  const checkAuthStatus = async () => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      
+      // Simulate splash screen delay
+      setTimeout(() => {
+        if (token) {
+          router.replace('/(tabs)');
+        } else {
+          setIsLoading(false);
+        }
+      }, 2000);
+    } catch (error) {
+      console.log('Error checking auth status:', error);
+      setIsLoading(false);
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <SafeAreaView style={styles.splashContainer}>
+        <ImageBackground
+          source={{ uri: 'https://customer-assets.emergentagent.com/job_recicla-contigo-1/artifacts/61qxumpg_ChatGPT%20Image%203%20oct%202025%2C%2010_52_44.png' }}
+          style={styles.splashBackground}
+          blurRadius={1}
+        >
+          <LinearGradient
+            colors={['rgba(46, 125, 50, 0.9)', 'rgba(33, 150, 243, 0.9)']}
+            style={styles.splashGradient}
+          >
+            <View style={styles.splashContent}>
+              <View style={styles.splashLogoContainer}>
+                <View style={styles.splashLogoCircle}>
+                  <Ionicons name="leaf" size={80} color="#FFD700" />
+                </View>
+                <Text style={styles.splashTitle}>VENTANILLA</Text>
+                <Text style={styles.splashSubtitle}>RECICLA CONTIGO</Text>
+                <View style={styles.splashTagline}>
+                  <Text style={styles.splashTaglineText}>Cuidando nuestro planeta</Text>
+                  <Text style={styles.splashTaglineText}>juntos</Text>
+                </View>
+              </View>
+              
+              <View style={styles.loadingContainer}>
+                <View style={styles.loadingDots}>
+                  <View style={[styles.dot, styles.dot1]} />
+                  <View style={[styles.dot, styles.dot2]} />
+                  <View style={[styles.dot, styles.dot3]} />
+                </View>
+                <Text style={styles.loadingText}>Cargando...</Text>
+              </View>
+            </View>
+          </LinearGradient>
+        </ImageBackground>
+      </SafeAreaView>
+    );
+  }
+
   return (
     <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.content}>
-        {/* Header */}
-        <View style={styles.header}>
-          <View style={styles.logoContainer}>
-            <Ionicons name="leaf" size={40} color="#4CAF50" />
-            <Text style={styles.appTitle}>VENTANILLA</Text>
-            <Text style={styles.appSubtitle}>RECICLA CONTIGO</Text>
+      <ImageBackground
+        source={{ uri: 'https://customer-assets.emergentagent.com/job_recicla-contigo-1/artifacts/61qxumpg_ChatGPT%20Image%203%20oct%202025%2C%2010_52_44.png' }}
+        style={styles.backgroundImage}
+        blurRadius={2}
+      >
+        <LinearGradient
+          colors={['rgba(46, 125, 50, 0.95)', 'rgba(33, 150, 243, 0.9)']}
+          style={styles.gradient}
+        >
+          <View style={styles.content}>
+            {/* Logo Section */}
+            <View style={styles.logoSection}>
+              <View style={styles.logoContainer}>
+                <View style={styles.logoCircle}>
+                  <Ionicons name="leaf" size={60} color="#FFD700" />
+                </View>
+                <Text style={styles.appTitle}>VENTANILLA</Text>
+                <Text style={styles.appSubtitle}>RECICLA CONTIGO</Text>
+              </View>
+            </View>
+
+            {/* Welcome Content */}
+            <View style={styles.welcomeContainer}>
+              <Text style={styles.welcomeTitle}>¡Bienvenido!</Text>
+              <Text style={styles.welcomeText}>
+                Únete a la revolución del reciclaje y ayuda a crear un futuro más sostenible para Ventanilla
+              </Text>
+              
+              <View style={styles.featuresContainer}>
+                <View style={styles.featureItem}>
+                  <Ionicons name="camera" size={24} color="#FFD700" />
+                  <Text style={styles.featureText}>Reporta problemas ambientales</Text>
+                </View>
+                <View style={styles.featureItem}>
+                  <Ionicons name="trophy" size={24} color="#FFD700" />
+                  <Text style={styles.featureText}>Gana puntos y recompensas</Text>
+                </View>
+                <View style={styles.featureItem}>
+                  <Ionicons name="people" size={24} color="#FFD700" />
+                  <Text style={styles.featureText}>Únete a la comunidad</Text>
+                </View>
+              </View>
+            </View>
+
+            {/* Action Buttons */}
+            <View style={styles.buttonsContainer}>
+              <TouchableOpacity 
+                style={styles.primaryButton}
+                onPress={() => router.push('/auth/register')}
+              >
+                <LinearGradient
+                  colors={['#4CAF50', '#388E3C']}
+                  style={styles.primaryButtonGradient}
+                >
+                  <Ionicons name="person-add" size={24} color="white" />
+                  <Text style={styles.primaryButtonText}>Crear Cuenta</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={styles.secondaryButton}
+                onPress={() => router.push('/auth/login')}
+              >
+                <View style={styles.secondaryButtonContent}>
+                  <Ionicons name="log-in" size={20} color="white" />
+                  <Text style={styles.secondaryButtonText}>Ya tengo cuenta</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            {/* Footer */}
+            <View style={styles.footer}>
+              <Text style={styles.footerText}>
+                Al continuar, aceptas ayudar a proteger el medio ambiente
+              </Text>
+            </View>
           </View>
-        </View>
-
-        {/* Welcome Section */}
-        <View style={styles.welcomeSection}>
-          <Text style={styles.welcomeTitle}>¡Bienvenido!</Text>
-          <Text style={styles.welcomeText}>
-            Únete a la revolución del reciclaje y ayuda a cuidar nuestro planeta
-          </Text>
-        </View>
-
-        {/* Quick Actions */}
-        <View style={styles.actionsContainer}>
-          <TouchableOpacity style={styles.actionCard}>
-            <Ionicons name="camera" size={30} color="#2196F3" />
-            <Text style={styles.actionTitle}>Reportar Punto Crítico</Text>
-            <Text style={styles.actionText}>Fotografía y reporta problemas ambientales</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.actionCard}>
-            <Ionicons name="book" size={30} color="#FF9800" />
-            <Text style={styles.actionTitle}>Educación Ambiental</Text>
-            <Text style={styles.actionText}>Aprende sobre reciclaje y sostenibilidad</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.actionCard}>
-            <Ionicons name="trophy" size={30} color="#4CAF50" />
-            <Text style={styles.actionTitle}>Incentivos</Text>
-            <Text style={styles.actionText}>Gana puntos y canjea recompensas</Text>
-          </TouchableOpacity>
-        </View>
-
-        {/* Stats Section */}
-        <View style={styles.statsContainer}>
-          <Text style={styles.statsTitle}>Tu Impacto Ambiental</Text>
-          <View style={styles.statsRow}>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>0</Text>
-              <Text style={styles.statLabel}>Reportes</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>0</Text>
-              <Text style={styles.statLabel}>Puntos</Text>
-            </View>
-            <View style={styles.statItem}>
-              <Text style={styles.statNumber}>0</Text>
-              <Text style={styles.statLabel}>Logros</Text>
-            </View>
-          </View>
-        </View>
-
-        {/* Get Started Button */}
-        <TouchableOpacity style={styles.getStartedButton}>
-          <Text style={styles.getStartedText}>Comenzar</Text>
-          <Ionicons name="arrow-forward" size={20} color="white" />
-        </TouchableOpacity>
-      </ScrollView>
-
-      {/* Bottom Navigation */}
-      <View style={styles.bottomNav}>
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="home" size={24} color="#4CAF50" />
-          <Text style={[styles.navText, { color: "#4CAF50" }]}>Inicio</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="camera-outline" size={24} color="#666" />
-          <Text style={styles.navText}>Reportar</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="book-outline" size={24} color="#666" />
-          <Text style={styles.navText}>Educación</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="gift-outline" size={24} color="#666" />
-          <Text style={styles.navText}>Incentivos</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity style={styles.navItem}>
-          <Ionicons name="person-outline" size={24} color="#666" />
-          <Text style={styles.navText}>Perfil</Text>
-        </TouchableOpacity>
-      </View>
+        </LinearGradient>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  // Splash Screen Styles
+  splashContainer: {
+    flex: 1,
+  },
+  splashBackground: {
+    flex: 1,
+  },
+  splashGradient: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  splashContent: {
+    alignItems: 'center',
+    paddingHorizontal: 20,
+  },
+  splashLogoContainer: {
+    alignItems: 'center',
+    marginBottom: 60,
+  },
+  splashLogoCircle: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 30,
+    borderWidth: 4,
+    borderColor: '#FFD700',
+  },
+  splashTitle: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#FFD700',
+    letterSpacing: 3,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 5,
+  },
+  splashSubtitle: {
+    fontSize: 20,
+    color: 'white',
+    marginBottom: 20,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
+  },
+  splashTagline: {
+    alignItems: 'center',
+  },
+  splashTaglineText: {
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.9)',
+    fontStyle: 'italic',
+    textAlign: 'center',
+  },
+  loadingContainer: {
+    alignItems: 'center',
+  },
+  loadingDots: {
+    flexDirection: 'row',
+    marginBottom: 20,
+  },
+  dot: {
+    width: 12,
+    height: 12,
+    borderRadius: 6,
+    backgroundColor: '#FFD700',
+    marginHorizontal: 4,
+  },
+  dot1: {
+    animationDelay: '0s',
+  },
+  dot2: {
+    animationDelay: '0.2s',
+  },
+  dot3: {
+    animationDelay: '0.4s',
+  },
+  loadingText: {
+    color: 'white',
+    fontSize: 16,
+    opacity: 0.8,
+  },
+  
+  // Main Screen Styles
   container: {
     flex: 1,
-    backgroundColor: "#f8f9fa",
+  },
+  backgroundImage: {
+    flex: 1,
+  },
+  gradient: {
+    flex: 1,
   },
   content: {
     flex: 1,
+    paddingHorizontal: 20,
+    justifyContent: 'space-between',
   },
-  header: {
-    backgroundColor: "#4CAF50",
-    paddingVertical: 20,
-    paddingHorizontal: 16,
-    borderBottomLeftRadius: 20,
-    borderBottomRightRadius: 20,
+  logoSection: {
+    paddingTop: 60,
+    alignItems: 'center',
   },
   logoContainer: {
-    alignItems: "center",
+    alignItems: 'center',
+  },
+  logoCircle: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    borderWidth: 3,
+    borderColor: '#FFD700',
   },
   appTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "white",
-    marginTop: 8,
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#FFD700',
+    letterSpacing: 2,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 2, height: 2 },
+    textShadowRadius: 5,
   },
   appSubtitle: {
-    fontSize: 16,
-    color: "white",
-    opacity: 0.9,
+    fontSize: 18,
+    color: 'white',
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
-  welcomeSection: {
-    padding: 20,
-    alignItems: "center",
+  welcomeContainer: {
+    alignItems: 'center',
+    paddingVertical: 40,
   },
   welcomeTitle: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#2E7D32",
-    marginBottom: 8,
+    fontSize: 28,
+    fontWeight: 'bold',
+    color: 'white',
+    marginBottom: 16,
+    textShadowColor: 'rgba(0, 0, 0, 0.5)',
+    textShadowOffset: { width: 1, height: 1 },
+    textShadowRadius: 3,
   },
   welcomeText: {
     fontSize: 16,
-    color: "#666",
-    textAlign: "center",
-    lineHeight: 22,
+    color: 'rgba(255, 255, 255, 0.9)',
+    textAlign: 'center',
+    lineHeight: 24,
+    marginBottom: 30,
   },
-  actionsContainer: {
-    paddingHorizontal: 16,
-    marginBottom: 20,
+  featuresContainer: {
+    width: '100%',
   },
-  actionCard: {
-    backgroundColor: "white",
-    padding: 20,
+  featureItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    paddingHorizontal: 20,
+    paddingVertical: 16,
     borderRadius: 12,
     marginBottom: 12,
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
   },
-  actionTitle: {
+  featureText: {
+    color: 'white',
     fontSize: 16,
-    fontWeight: "bold",
-    color: "#333",
-    marginTop: 8,
-    marginBottom: 4,
+    marginLeft: 16,
+    fontWeight: '500',
   },
-  actionText: {
-    fontSize: 14,
-    color: "#666",
-    textAlign: "center",
+  buttonsContainer: {
+    paddingVertical: 40,
   },
-  statsContainer: {
-    backgroundColor: "white",
-    margin: 16,
-    padding: 20,
-    borderRadius: 12,
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  statsTitle: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "#333",
-    textAlign: "center",
+  primaryButton: {
+    borderRadius: 16,
+    overflow: 'hidden',
     marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 4,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
-  statsRow: {
-    flexDirection: "row",
-    justifyContent: "space-around",
+  primaryButtonGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 18,
   },
-  statItem: {
-    alignItems: "center",
+  primaryButtonText: {
+    color: 'white',
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginLeft: 12,
   },
-  statNumber: {
-    fontSize: 24,
-    fontWeight: "bold",
-    color: "#4CAF50",
+  secondaryButton: {
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.6)',
+    borderRadius: 16,
+    overflow: 'hidden',
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
   },
-  statLabel: {
-    fontSize: 12,
-    color: "#666",
-    marginTop: 4,
+  secondaryButtonContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 16,
   },
-  getStartedButton: {
-    backgroundColor: "#2196F3",
-    margin: 16,
-    padding: 16,
-    borderRadius: 12,
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  getStartedText: {
-    color: "white",
+  secondaryButtonText: {
+    color: 'white',
     fontSize: 16,
-    fontWeight: "bold",
-    marginRight: 8,
+    fontWeight: '600',
+    marginLeft: 8,
   },
-  bottomNav: {
-    flexDirection: "row",
-    backgroundColor: "white",
-    paddingVertical: 8,
-    paddingHorizontal: 16,
-    borderTopWidth: 1,
-    borderTopColor: "#e0e0e0",
+  footer: {
+    paddingBottom: 40,
+    alignItems: 'center',
   },
-  navItem: {
-    flex: 1,
-    alignItems: "center",
-    paddingVertical: 8,
-  },
-  navText: {
-    fontSize: 10,
-    color: "#666",
-    marginTop: 4,
+  footerText: {
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontSize: 14,
+    textAlign: 'center',
+    fontStyle: 'italic',
   },
 });
