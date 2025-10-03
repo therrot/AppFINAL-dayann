@@ -158,7 +158,7 @@ def get_user(user_id: str):
             "reportes_enviados": user.get("reportes_enviados", 0),
             "logros": user.get("logros", [])
         }
-    except:
+    except Exception:
         raise HTTPException(status_code=400, detail="ID de usuario inválido")
 
 @app.post("/api/reportes")
