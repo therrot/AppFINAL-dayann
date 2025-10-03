@@ -11,15 +11,9 @@ import os
 from datetime import datetime
 import sys
 
-# Get backend URL from frontend environment
+# Get backend URL - use localhost for testing since external URL routes to frontend
 def get_backend_url():
-    try:
-        with open('/app/frontend/.env', 'r') as f:
-            for line in f:
-                if line.startswith('EXPO_PUBLIC_BACKEND_URL='):
-                    return line.split('=', 1)[1].strip()
-    except:
-        pass
+    # For testing, use localhost directly since the external URL routes to frontend
     return "http://localhost:8001"
 
 BASE_URL = get_backend_url()
