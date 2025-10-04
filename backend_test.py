@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 Backend API Testing for VENTANILLA RECICLA CONTIGO
-Testing NEW FUNCTIONALITY: Updated points system, public reports, and new endpoints
+Testing NEW FUNCTIONALITY: Profile photos, updated points system, public reports, and new endpoints
 """
 
 import requests
@@ -14,17 +14,8 @@ import sys
 
 load_dotenv()
 
-# Get backend URL from frontend .env file
-def get_backend_url():
-    frontend_env_path = "/app/frontend/.env"
-    if os.path.exists(frontend_env_path):
-        with open(frontend_env_path, 'r') as f:
-            for line in f:
-                if line.startswith('EXPO_PUBLIC_BACKEND_URL='):
-                    return line.split('=')[1].strip()
-    return "http://localhost:8001"
-
-BASE_URL = get_backend_url()
+# Use localhost for backend testing since external URL serves frontend
+BASE_URL = "http://localhost:8001"
 API_URL = f"{BASE_URL}/api"
 
 print(f"🧪 Testing VENTANILLA RECICLA CONTIGO API - NEW FUNCTIONALITY")
