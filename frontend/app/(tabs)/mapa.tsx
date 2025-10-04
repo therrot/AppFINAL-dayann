@@ -9,101 +9,11 @@ import {
   RefreshControl,
   Modal,
   Image,
-  Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
 import { AnimatedBackground } from '../../components/AnimatedBackground';
-
-// Componente de mapa que funciona en web y móvil
-const MapComponent = ({ children, style, initialRegion, ...props }: any) => {
-  if (Platform.OS === 'web') {
-    // Simulación de mapa para web
-    return (
-      <View style={[style, styles.webMap]}>
-        <View style={styles.webMapHeader}>
-          <Ionicons name="map" size={24} color="#4CAF50" />
-          <Text style={styles.webMapTitle}>🗺️ Mapa de Ventanilla, Lima</Text>
-        </View>
-        <Text style={styles.webMapSubtitle}>Ubicación: Lat {initialRegion?.latitude}, Lng {initialRegion?.longitude}</Text>
-        <ScrollView style={styles.webMapScroll}>
-          {children}
-        </ScrollView>
-        <View style={styles.webMapNote}>
-          <Text style={styles.webMapNoteText}>📱 En dispositivos móviles verás Google Maps interactivo</Text>
-        </View>
-      </View>
-    );
-  }
-  
-  // Para móvil, usa react-native-maps (se cargará dinámicamente)
-  try {
-    const MapView = require('react-native-maps').default;
-    return (
-      <MapView
-        style={style}
-        initialRegion={initialRegion}
-        showsUserLocation={true}
-        showsMyLocationButton={true}
-        {...props}
-      >
-        {children}
-      </MapView>
-    );
-  } catch (error) {
-    // Fallback si react-native-maps no está disponible
-    return (
-      <View style={[style, styles.webMap]}>
-        <View style={styles.webMapHeader}>
-          <Ionicons name="map" size={24} color="#4CAF50" />
-          <Text style={styles.webMapTitle}>🗺️ Mapa de Reportes</Text>
-        </View>
-        <ScrollView style={styles.webMapScroll}>
-          {children}
-        </ScrollView>
-      </View>
-    );
-  }
-};
-
-// Componente de marcador que funciona en web y móvil  
-const MarkerComponent = ({ coordinate, title, description, onPress, children }: any) => {
-  if (Platform.OS === 'web') {
-    return (
-      <TouchableOpacity style={styles.webMarker} onPress={onPress}>
-        <View style={styles.webMarkerContent}>
-          <Ionicons name="location" size={16} color="#FF5722" />
-          <Text style={styles.webMarkerTitle} numberOfLines={1}>{title}</Text>
-        </View>
-        <Text style={styles.webMarkerDescription} numberOfLines={2}>{description}</Text>
-      </TouchableOpacity>
-    );
-  }
-  
-  try {
-    const { Marker } = require('react-native-maps');
-    return (
-      <Marker
-        coordinate={coordinate}
-        title={title}
-        description={description}
-        onPress={onPress}
-      >
-        {children}
-      </Marker>
-    );
-  } catch (error) {
-    return (
-      <TouchableOpacity style={styles.webMarker} onPress={onPress}>
-        <View style={styles.webMarkerContent}>
-          <Ionicons name="location" size={16} color="#FF5722" />
-          <Text style={styles.webMarkerTitle}>{title}</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  }
-};
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
