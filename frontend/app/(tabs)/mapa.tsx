@@ -20,6 +20,7 @@ import { useTheme } from '../../contexts/ThemeContext';
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
 export default function MapaScreen() {
+  const { theme } = useTheme();
   const [reportes, setReportes] = useState([]);
   const [reportesPublicos, setReportesPublicos] = useState([]);
   const [selectedReport, setSelectedReport] = useState<any>(null);
