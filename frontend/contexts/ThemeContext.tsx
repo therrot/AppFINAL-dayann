@@ -1,5 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { createContext, useContext, useState } from 'react';
 
 export interface Theme {
   background: string[];
@@ -7,11 +6,6 @@ export interface Theme {
   textPrimary: string;
   textSecondary: string;
   accent: string;
-  success: string;
-  warning: string;
-  error: string;
-  surface: string;
-  surfaceSecondary: string;
 }
 
 const lightTheme: Theme = {
@@ -20,11 +14,6 @@ const lightTheme: Theme = {
   textPrimary: '#333333',
   textSecondary: '#666666',
   accent: '#4CAF50',
-  success: '#4CAF50',
-  warning: '#FF9800',
-  error: '#F44336',
-  surface: '#FFFFFF',
-  surfaceSecondary: '#F5F5F5',
 };
 
 const darkTheme: Theme = {
@@ -33,66 +22,21 @@ const darkTheme: Theme = {
   textPrimary: '#FFFFFF',
   textSecondary: '#B0B0B0',
   accent: '#66BB6A',
-  success: '#66BB6A',
-  warning: '#FFB74D',
-  error: '#EF5350',
-  surface: '#2D3748',
-  surfaceSecondary: '#1A202C',
 };
 
 interface ThemeContextType {
   theme: Theme;
   isDark: boolean;
   toggleTheme: () => void;
-  backgroundAnimation: boolean;
-  toggleBackgroundAnimation: () => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isDark, setIsDark] = useState(false);
-  const [backgroundAnimation, setBackgroundAnimation] = useState(true);
 
-  useEffect(() => {
-    loadThemeSettings();
-  }, []);
-
-  const loadThemeSettings = async () => {
-    try {
-      const savedTheme = await AsyncStorage.getItem('theme');
-      const savedAnimation = await AsyncStorage.getItem('backgroundAnimation');
-      
-      if (savedTheme !== null) {
-        setIsDark(savedTheme === 'dark');
-      }
-      
-      if (savedAnimation !== null) {
-        setBackgroundAnimation(savedAnimation === 'true');
-      }
-    } catch (error) {
-      console.log('Error loading theme settings:', error);
-    }
-  };
-
-  const toggleTheme = async () => {
-    const newTheme = !isDark;
-    setIsDark(newTheme);
-    try {
-      await AsyncStorage.setItem('theme', newTheme ? 'dark' : 'light');
-    } catch (error) {
-      console.log('Error saving theme:', error);
-    }
-  };
-
-  const toggleBackgroundAnimation = async () => {
-    const newAnimation = !backgroundAnimation;
-    setBackgroundAnimation(newAnimation);
-    try {
-      await AsyncStorage.setItem('backgroundAnimation', newAnimation.toString());
-    } catch (error) {
-      console.log('Error saving animation setting:', error);
-    }
+  const toggleTheme = () => {
+    setIsDark(!isDark);
   };
 
   const theme = isDark ? darkTheme : lightTheme;
@@ -102,8 +46,6 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       theme,
       isDark,
       toggleTheme,
-      backgroundAnimation,
-      toggleBackgroundAnimation,
     }}>
       {children}
     </ThemeContext.Provider>
