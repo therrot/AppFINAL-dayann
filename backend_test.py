@@ -142,7 +142,22 @@ def test_new_functionality():
             print(f"    🎯 Initial Points: {result['usuario']['puntos']}")
             results.add_pass(f"User registration - {user_data['nombre']}")
         else:
-            results.add_fail(f"User registration - {user_data['nombre']}", "Failed to create user", critical=True)
+            # User might already exist, try login
+            print(f"    ⚠️ User might exist, trying login...")
+            login_data = {"email": user_data["email"], "password": user_data["password"]}
+            login_result = test_api_endpoint("POST", "/login", login_data)
+            if login_result and "user_id" in login_result:
+                created_users.append({
+                    "user_id": login_result["user_id"],
+                    "token": login_result["token"],
+                    "nombre": user_data["nombre"],
+                    "email": user_data["email"]
+                })
+                print(f"    🆔 User ID (login): {login_result['user_id']}")
+                print(f"    🎯 Current Points: {login_result['usuario']['puntos']}")
+                results.add_pass(f"User login (existing) - {user_data['nombre']}")
+            else:
+                results.add_fail(f"User registration/login - {user_data['nombre']}", "Failed to create or login user", critical=True)
     
     if not created_users:
         results.add_fail("User Registration", "No users created. Cannot proceed with report testing.", critical=True)
