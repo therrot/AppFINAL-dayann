@@ -7,7 +7,8 @@ import {
   ScrollView,
   TouchableOpacity,
   ImageBackground,
-  RefreshControl
+  RefreshControl,
+  Image
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
