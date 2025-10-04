@@ -107,7 +107,7 @@ export default function Register() {
         blurRadius={2}
       >
         <LinearGradient
-          colors={['rgba(33, 150, 243, 0.9)', 'rgba(46, 125, 50, 0.9)']}
+          colors={['rgba(33, 150, 243, 0.98)', 'rgba(46, 125, 50, 0.96)', 'rgba(0, 0, 0, 0.85)']}>
           style={styles.gradient}
         >
           <KeyboardAvoidingView 
