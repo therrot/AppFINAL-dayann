@@ -261,6 +261,16 @@ export default function MapaScreen() {
                         {formatDate(selectedReport.fecha)}
                       </Text>
 
+                      {selectedReport.foto_base64 && (
+                        <View style={styles.modalPhotoContainer}>
+                          <Image 
+                            source={{ uri: selectedReport.foto_base64 }}
+                            style={styles.modalPhoto}
+                            resizeMode="cover"
+                          />
+                        </View>
+                      )}
+
                       {selectedReport.direccion && (
                         <View style={styles.modalLocation}>
                           <Ionicons name="location" size={20} color="#4CAF50" />
