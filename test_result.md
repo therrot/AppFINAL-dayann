@@ -345,6 +345,18 @@ backend:
         agent: "testing"
         comment: "✅ NEW FUNCTIONALITY: Complete integration flow tested and working. Create user → update photo → make report → verify points flow working correctly. All data consistency verified: user points (20 per report), reports counter, profile photo persistence, public reports with user names, map reports optimization. Full end-to-end functionality confirmed."
 
+  - task: "Public Reports with Photos Verification (After Map Removal)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ VERIFIED: GET /api/reportes-publicos returns 14 public reports with foto_base64 field containing visible photos and user names. Public photos functionality confirmed working after map removal."
+
 frontend:
   # No frontend testing performed as per instructions
 
