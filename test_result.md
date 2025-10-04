@@ -102,7 +102,7 @@
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
 
-user_problem_statement: "Test the VENTANILLA RECICLA CONTIGO API backend to ensure all endpoints are working correctly"
+user_problem_statement: "Eliminar la funcionalidad del mapa que está causando errores y asegurar que los reportes públicos con fotos aparezcan para todos los usuarios"
 
 backend:
   - task: "User Registration API"
