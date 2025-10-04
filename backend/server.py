@@ -161,7 +161,9 @@ def get_user(user_id: str):
             "email": user["email"],
             "puntos": user.get("puntos", 0),
             "reportes_enviados": user.get("reportes_enviados", 0),
-            "logros": user.get("logros", [])
+            "logros": user.get("logros", []),
+            "foto_perfil": user.get("foto_perfil", None),
+            "fecha_registro": user.get("fecha_registro")
         }
     except Exception:
         raise HTTPException(status_code=400, detail="ID de usuario inválido")
