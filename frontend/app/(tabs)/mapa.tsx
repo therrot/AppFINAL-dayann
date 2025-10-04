@@ -116,7 +116,17 @@ export default function MapaScreen() {
           /* Map View */
           <View style={styles.content}>
             <View style={styles.mapContainer}>
-              <MapView style={styles.map}>
+              <MapView
+                style={styles.map}
+                initialRegion={{
+                  latitude: -11.8795,
+                  longitude: -77.1282,
+                  latitudeDelta: 0.0922,
+                  longitudeDelta: 0.0421,
+                }}
+                showsUserLocation={true}
+                showsMyLocationButton={true}
+              >
                 {reportes.map((reporte: any, index: number) => (
                   <Marker
                     key={index}
@@ -124,10 +134,14 @@ export default function MapaScreen() {
                       latitude: reporte.latitud,
                       longitude: reporte.longitud,
                     }}
-                    title={reporte.descripcion?.substring(0, 30) + '...'}
-                    description={`Por ${reporte.usuario_nombre}`}
+                    title={reporte.descripcion?.substring(0, 40)}
+                    description={`Reportado por: ${reporte.usuario_nombre}`}
                     onPress={() => openReportDetail(reporte)}
-                  />
+                  >
+                    <View style={styles.customMarker}>
+                      <Ionicons name="warning" size={24} color="white" />
+                    </View>
+                  </Marker>
                 ))}
               </MapView>
               
