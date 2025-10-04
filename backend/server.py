@@ -95,6 +95,7 @@ def register_user(user: UserRegister):
         "password": hashed_password,
         "latitud": user.latitud,
         "longitud": user.longitud,
+        "foto_perfil": user.foto_perfil,
         "puntos": 0,
         "reportes_enviados": 0,
         "fecha_registro": datetime.utcnow(),
