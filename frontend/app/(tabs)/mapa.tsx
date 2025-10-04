@@ -7,18 +7,17 @@ import {
   ScrollView,
   TouchableOpacity,
   Alert,
-  ImageBackground,
   RefreshControl,
   Modal,
-  Image
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
+import MapView, { Marker } from 'react-native-maps';
+import { AnimatedBackground } from '../../components/AnimatedBackground';
+import { useTheme } from '../../contexts/ThemeContext';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-
-import MapView, { Marker } from 'react-native-maps';
 
 export default function MapaScreen() {
   const [reportes, setReportes] = useState([]);
