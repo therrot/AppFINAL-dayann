@@ -350,8 +350,8 @@ frontend:
 
 metadata:
   created_by: "testing_agent"
-  version: "1.1"
-  test_sequence: 2
+  version: "1.2"
+  test_sequence: 3
   run_ui: false
 
 test_plan:
@@ -373,3 +373,5 @@ agent_communication:
     message: "COMPLETE INTEGRATION TESTING FINISHED: Executed comprehensive end-to-end testing of ALL NEW FUNCTIONALITIES as requested. ✅ Profile Photo System (registration + updates) ✅ 20 Points System ✅ Public Reports with User Names ✅ Map Reports Optimization ✅ Terms with Fernando Rufasto ✅ Complete Integration Flow (create user → update photo → make report → verify points). All 24/24 tests passed. Fixed 1 minor issue during testing (foto_perfil not saved during registration). VENTANILLA RECICLA CONTIGO backend is FULLY FUNCTIONAL with all new features working correctly for real Ventanilla users."
   - agent: "testing"
     message: "EXHAUSTIVE TESTING COMPLETED AS REQUESTED: Executed comprehensive testing of ALL functionalities for VENTANILLA RECICLA CONTIGO as specifically requested by user. ✅ Backend API Complete - All endpoints working without errors ✅ Profile Photo System (PUT /api/usuarios/{user_id}) - Working correctly ✅ Report System with Photos (POST /api/reportes) - Photos saved in base64, 20 points awarded ✅ Public Reports WITH PHOTOS (GET /api/reportes-publicos) - Photos included and visualizable ✅ Google Maps Integration - Ventanilla coordinates (-11.8795, -77.1282) verified ✅ Points and Users System - Complete flow working (create user → update photo → make report → verify 20 points) ✅ All Additional Endpoints - Incentives, Education, News, Ranking, Terms all working. TOTAL: 20/20 comprehensive tests passed. NO CRITICAL ISSUES FOUND. Backend is FULLY FUNCTIONAL for Ventanilla users."
+  - agent: "testing"
+    message: "USER-REQUESTED FUNCTIONALITY VERIFICATION COMPLETED: Executed specific testing as requested by user focusing on main functionalities. ✅ PUBLIC REPORTS WITH PHOTOS (GET /api/reportes-publicos) - CONFIRMED: 14 public reports found, all contain foto_base64 field with visible photos, user names included ✅ POINTS SYSTEM (POST /api/reportes) - CONFIRMED: Awards exactly 20 points per report, user points update correctly in database ✅ AUTHENTICATION SYSTEM - CONFIRMED: Registration and login working correctly, returns JWT tokens and user IDs ✅ TEST DATA CREATION - CONFIRMED: Created additional test reports with realistic Ventanilla data, all appear in public reports. RESULT: All 4 requested functionalities are working perfectly. Backend is fully operational for Ventanilla users with photos visible in public reports."
