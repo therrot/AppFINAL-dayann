@@ -18,33 +18,7 @@ import axios from 'axios';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 
-// Simulamos MapView para web/preview, en dispositivo real usar react-native-maps
-const MapView = ({ children, style, ...props }: any) => (
-  <View style={[style, { backgroundColor: '#e8f5e9', justifyContent: 'center', alignItems: 'center' }]}>
-    <Text style={{ color: '#4CAF50', fontSize: 16, fontWeight: 'bold' }}>🗺️ Mapa de Ventanilla</Text>
-    <Text style={{ color: '#666', fontSize: 12, marginTop: 4 }}>Vista de reportes ambientales</Text>
-    {children}
-  </View>
-);
-
-const Marker = ({ coordinate, title, description, onPress }: any) => (
-  <TouchableOpacity
-    style={{
-      position: 'absolute',
-      width: 30,
-      height: 30,
-      borderRadius: 15,
-      backgroundColor: '#FF5722',
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderWidth: 2,
-      borderColor: 'white'
-    }}
-    onPress={onPress}
-  >
-    <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>!</Text>
-  </TouchableOpacity>
-);
+import MapView, { Marker } from 'react-native-maps';
 
 export default function MapaScreen() {
   const [reportes, setReportes] = useState([]);
