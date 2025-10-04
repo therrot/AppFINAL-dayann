@@ -397,11 +397,157 @@ def test_new_functionality():
     print("🏁 NEW FUNCTIONALITY TESTING COMPLETED")
     print("=" * 60)
 
+def test_terminos_specific():
+    """
+    Specific test for GET /api/terminos endpoint as requested by user
+    Verifies:
+    1. Propietarios: "Dayan Gallegos" and "Maria Ferrer"
+    2. Desarrollador: "Fernando Rufasto" 
+    3. Complete terms and conditions content
+    4. All required fields structure (mision, vision, contacto, etc.)
+    """
+    print("\n🎯 SPECIFIC TERMINOS ENDPOINT TEST (USER REQUESTED)")
+    print("=" * 60)
+    
+    print("\n📜 Testing GET /api/terminos endpoint...")
+    terms = test_api_endpoint("GET", "/terminos")
+    
+    if not terms:
+        results.add_fail("Terms endpoint connectivity", "Failed to connect to /api/terminos", critical=True)
+        return
+    
+    print(f"✅ Successfully connected to /api/terminos")
+    
+    # Test 1: Verify Propietarios
+    print("\n1️⃣ Testing Propietarios...")
+    propietarios = terms.get("propietarios", [])
+    expected_owners = ["Dayan Gallegos", "Maria Ferrer"]
+    
+    if not isinstance(propietarios, list):
+        results.add_fail("Propietarios structure", f"Expected list, got {type(propietarios)}", critical=True)
+        return
+    
+    print(f"    📋 Found propietarios: {propietarios}")
+    
+    for owner in expected_owners:
+        if owner in propietarios:
+            print(f"    ✅ Found propietario: {owner}")
+            results.add_pass(f"Propietario present: {owner}")
+        else:
+            print(f"    ❌ MISSING propietario: {owner}")
+            results.add_fail(f"Propietario missing: {owner}", f"Expected '{owner}' in {propietarios}", critical=True)
+    
+    # Test 2: Verify Desarrollador
+    print("\n2️⃣ Testing Desarrollador...")
+    desarrollador = terms.get("desarrollador")
+    expected_developer = "Fernando Rufasto"
+    
+    print(f"    👨‍💻 Found desarrollador: {desarrollador}")
+    
+    if desarrollador == expected_developer:
+        print(f"    ✅ Desarrollador correct: {desarrollador}")
+        results.add_pass("Desarrollador correct")
+    else:
+        print(f"    ❌ FAILED: Expected '{expected_developer}', got '{desarrollador}'")
+        results.add_fail("Desarrollador incorrect", f"Expected '{expected_developer}', got '{desarrollador}'", critical=True)
+    
+    # Test 3: Verify Complete Structure
+    print("\n3️⃣ Testing Complete Structure...")
+    required_fields = [
+        "app_name", "version", "propietarios", "desarrollador", 
+        "fecha_creacion", "descripcion", "mision", "vision", 
+        "terminos", "contacto", "politica_privacidad", "licencia", 
+        "derechos", "agradecimientos"
+    ]
+    
+    print(f"    🏗️ Checking {len(required_fields)} required fields...")
+    
+    missing_fields = []
+    for field in required_fields:
+        if field in terms:
+            print(f"    ✅ Field present: {field}")
+            results.add_pass(f"Field present: {field}")
+        else:
+            missing_fields.append(field)
+            print(f"    ❌ MISSING field: {field}")
+            results.add_fail(f"Field missing: {field}", f"Required field '{field}' not found", critical=True)
+    
+    # Test 4: Verify Content Quality
+    print("\n4️⃣ Testing Content Quality...")
+    
+    # Check app name
+    app_name = terms.get("app_name")
+    expected_app_name = "VENTANILLA RECICLA CONTIGO"
+    print(f"    📱 App name: {app_name}")
+    if app_name == expected_app_name:
+        print(f"    ✅ App name correct")
+        results.add_pass("App name correct")
+    else:
+        print(f"    ❌ App name incorrect: expected '{expected_app_name}', got '{app_name}'")
+        results.add_fail("App name incorrect", f"Expected '{expected_app_name}', got '{app_name}'", critical=True)
+    
+    # Check mision content
+    mision = terms.get("mision", "")
+    print(f"    🎯 Mision: {mision[:100]}...")
+    if "Ventanilla" in mision and "medio ambiente" in mision:
+        print(f"    ✅ Mision content appropriate")
+        results.add_pass("Mision content appropriate")
+    else:
+        print(f"    ❌ Mision content insufficient")
+        results.add_fail("Mision content insufficient", f"Missing key terms in: {mision[:100]}...", critical=True)
+    
+    # Check vision content
+    vision = terms.get("vision", "")
+    print(f"    🔮 Vision: {vision[:100]}...")
+    if "Ventanilla" in vision and "sostenibilidad" in vision:
+        print(f"    ✅ Vision content appropriate")
+        results.add_pass("Vision content appropriate")
+    else:
+        print(f"    ❌ Vision content insufficient")
+        results.add_fail("Vision content insufficient", f"Missing key terms in: {vision[:100]}...", critical=True)
+    
+    # Check terms array
+    terminos_array = terms.get("terminos", [])
+    print(f"    📋 Terms array length: {len(terminos_array) if isinstance(terminos_array, list) else 'not a list'}")
+    if isinstance(terminos_array, list) and len(terminos_array) > 10:
+        print(f"    ✅ Terms array complete with {len(terminos_array)} items")
+        results.add_pass("Terms array complete")
+    else:
+        print(f"    ❌ Terms array insufficient")
+        results.add_fail("Terms array insufficient", f"Expected list with >10 items, got {len(terminos_array) if isinstance(terminos_array, list) else 'not a list'}", critical=True)
+    
+    # Check contact details
+    contacto = terms.get("contacto", {})
+    required_contact_fields = ["municipalidad", "email_soporte", "telefono", "direccion"]
+    print(f"    📞 Contact info: {len(contacto)} fields")
+    
+    for field in required_contact_fields:
+        if field in contacto:
+            print(f"    ✅ Contact field present: {field} = {contacto[field]}")
+            results.add_pass(f"Contact field: {field}")
+        else:
+            print(f"    ❌ MISSING contact field: {field}")
+            results.add_fail(f"Contact field missing: {field}", f"Required contact field '{field}' not found", critical=True)
+    
+    print("\n🎉 TERMINOS ENDPOINT SPECIFIC TEST COMPLETED!")
+    print("=" * 60)
+    print("SUMMARY OF REQUESTED VERIFICATION:")
+    print(f"✅ Propietarios: {', '.join(propietarios) if isinstance(propietarios, list) else 'ERROR'}")
+    print(f"✅ Desarrollador: {desarrollador}")
+    print(f"✅ App Name: {app_name}")
+    print(f"✅ Mision: Present and appropriate")
+    print(f"✅ Vision: Present and appropriate")
+    print(f"✅ Terms Count: {len(terminos_array) if isinstance(terminos_array, list) else 'ERROR'} items")
+    print(f"✅ Contact Info: {len(contacto)} fields present")
+    print("=" * 60)
+
 def main():
-    """Run new functionality tests"""
-    print("\n🧪 Starting VENTANILLA RECICLA CONTIGO New Functionality Tests")
+    """Run specific terminos endpoint test as requested"""
+    print("\n🧪 VENTANILLA RECICLA CONTIGO - SPECIFIC TERMINOS ENDPOINT TEST")
+    print("=" * 60)
     print(f"Backend URL: {BASE_URL}")
     print(f"API URL: {API_URL}")
+    print("=" * 60)
     
     # Test basic connectivity first
     print("\n🔌 Testing basic connectivity...")
@@ -416,8 +562,8 @@ def main():
         print(f"  ❌ Cannot connect to backend: {e}")
         return 1
     
-    # Run new functionality tests
-    test_new_functionality()
+    # Run the specific terminos test as requested
+    test_terminos_specific()
     
     # Print summary
     results.summary()
