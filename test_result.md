@@ -297,6 +297,54 @@ backend:
         agent: "testing"
         comment: "✅ NEW FUNCTIONALITY: Enhanced reports structure working correctly. Reports now include usuario_id field, are marked as publico=True and estado=activo by default. User linking verified through GET /api/reportes/{usuario_id}. Database schema updated successfully."
 
+  - task: "Profile Photo System (Registration with foto_perfil)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ NEW FUNCTIONALITY: Profile photo system working correctly. POST /api/usuarios now accepts optional foto_perfil in base64 format during registration. Fixed issue where foto_perfil wasn't being saved during registration. Registration with profile photo tested and working."
+
+  - task: "Profile Photo Update System (PUT /api/usuarios/{user_id})"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ NEW FUNCTIONALITY: Profile photo update system working correctly. PUT /api/usuarios/{user_id} accepts foto_perfil updates, supports combined name+photo updates, includes proper error handling for empty updates and invalid user IDs. Photo persistence verified in database."
+
+  - task: "Get User with Profile Photo"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ NEW FUNCTIONALITY: GET /api/usuarios/{user_id} correctly includes foto_perfil field in response. Profile photos are properly retrieved and returned with user data. Integration with existing user data structure working correctly."
+
+  - task: "Complete Integration Flow"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ NEW FUNCTIONALITY: Complete integration flow tested and working. Create user → update photo → make report → verify points flow working correctly. All data consistency verified: user points (20 per report), reports counter, profile photo persistence, public reports with user names, map reports optimization. Full end-to-end functionality confirmed."
+
 frontend:
   # No frontend testing performed as per instructions
 
