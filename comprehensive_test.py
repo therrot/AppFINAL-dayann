@@ -14,8 +14,8 @@ from dotenv import load_dotenv
 # Load environment variables
 load_dotenv('/app/frontend/.env')
 
-# Get backend URL from frontend environment
-BACKEND_URL = os.getenv('EXPO_PUBLIC_BACKEND_URL', 'http://localhost:8001')
+# Use localhost for backend testing
+BACKEND_URL = 'http://localhost:8001'
 API_BASE = f"{BACKEND_URL}/api"
 
 print(f"🚀 COMPREHENSIVE TEST SUITE - VENTANILLA RECICLA CONTIGO")
