@@ -196,6 +196,55 @@ export default function HomeScreen() {
               </View>
             </View>
 
+            {/* Public Reports Section */}
+            <View style={styles.sectionContainer}>
+              <Text style={styles.sectionTitle}>Reportes de la Comunidad</Text>
+              {reportesPublicos.map((reporte: any, index: number) => (
+                <View key={index} style={styles.reportCard}>
+                  <LinearGradient
+                    colors={['rgba(255, 255, 255, 0.95)', 'rgba(255, 255, 255, 0.9)']}
+                    style={styles.reportGradient}
+                  >
+                    <View style={styles.reportHeader}>
+                      <View style={styles.reportIcon}>
+                        <Ionicons name="warning" size={20} color="#FF5722" />
+                      </View>
+                      <View style={styles.reportInfo}>
+                        <Text style={styles.reportTitle} numberOfLines={2}>
+                          {reporte.descripcion}
+                        </Text>
+                        <Text style={styles.reportUser}>
+                          Por: {reporte.usuario_nombre}
+                        </Text>
+                        <Text style={styles.reportDate}>
+                          {formatDate(reporte.fecha)}
+                        </Text>
+                      </View>
+                    </View>
+                    
+                    {reporte.foto_base64 && (
+                      <View style={styles.reportPhotoContainer}>
+                        <Image 
+                          source={{ uri: reporte.foto_base64 }}
+                          style={styles.reportPhoto}
+                          resizeMode="cover"
+                        />
+                      </View>
+                    )}
+                    
+                    {reporte.direccion && (
+                      <View style={styles.reportLocation}>
+                        <Ionicons name="location-outline" size={14} color="#4CAF50" />
+                        <Text style={styles.reportLocationText} numberOfLines={1}>
+                          {reporte.direccion}
+                        </Text>
+                      </View>
+                    )}
+                  </LinearGradient>
+                </View>
+              ))}
+            </View>
+
             {/* News Section */}
             <View style={styles.sectionContainer}>
               <Text style={styles.sectionTitle}>Noticias Ambientales</Text>
