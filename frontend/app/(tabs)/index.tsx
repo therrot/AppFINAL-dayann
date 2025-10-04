@@ -508,4 +508,74 @@ const styles = StyleSheet.create({
   bottomSpacing: {
     height: 20,
   },
+  reportCard: {
+    marginBottom: 12,
+    borderRadius: 16,
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  reportGradient: {
+    padding: 16,
+  },
+  reportHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  reportIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#FFEBEE',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 12,
+  },
+  reportInfo: {
+    flex: 1,
+  },
+  reportTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 4,
+  },
+  reportUser: {
+    fontSize: 12,
+    color: '#666',
+    marginBottom: 2,
+  },
+  reportDate: {
+    fontSize: 12,
+    color: '#999',
+  },
+  reportPhotoContainer: {
+    marginTop: 12,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  reportPhoto: {
+    width: '100%',
+    height: 150,
+  },
+  reportLocation: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 8,
+    paddingTop: 8,
+    borderTopWidth: 1,
+    borderTopColor: '#f0f0f0',
+  },
+  reportLocationText: {
+    fontSize: 12,
+    color: '#4CAF50',
+    marginLeft: 6,
+    flex: 1,
+  },
 });
