@@ -389,6 +389,27 @@ def get_notificaciones(usuario_id: str):
 def delete_notificacion(notif_id: str):
     return {"message": "Notificación eliminada"}
 
+@app.get("/api/terminos")
+def get_terminos():
+    terminos = {
+        "app_name": "VENTANILLA RECICLA CONTIGO",
+        "version": "1.0.0",
+        "creado_por": "Fernando Rufasto",
+        "fecha_creacion": "2024",
+        "descripcion": "Aplicación móvil para el cuidado del medio ambiente en Ventanilla, Lima, Perú",
+        "terminos": [
+            "Al usar esta aplicación, aceptas contribuir al cuidado del medio ambiente",
+            "Los reportes enviados serán públicos para la comunidad",
+            "La información de ubicación se usa únicamente para geolocalizar reportes ambientales",
+            "Las fotos enviadas pueden ser utilizadas para promover el cuidado ambiental",
+            "El sistema de puntos e incentivos está sujeto a disponibilidad"
+        ],
+        "contacto": "Municipalidad de Ventanilla",
+        "politica_privacidad": "Tu privacidad es importante. Solo recopilamos información necesaria para el funcionamiento de la app.",
+        "derechos": "© 2024 Fernando Rufasto. Todos los derechos reservados."
+    }
+    return terminos
+
 if __name__ == "__main__":
     import uvicorn
     uvicorn.run(app, host="0.0.0.0", port=8001)
