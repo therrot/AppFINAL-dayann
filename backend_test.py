@@ -14,8 +14,8 @@ import sys
 
 load_dotenv()
 
-# Use localhost for backend testing since external URL serves frontend
-BASE_URL = "http://localhost:8001"
+# Use external URL from frontend environment
+BASE_URL = "https://recicla-ventanilla.preview.emergentagent.com"
 API_URL = f"{BASE_URL}/api"
 
 print(f"🧪 Testing VENTANILLA RECICLA CONTIGO API - NEW FUNCTIONALITY")
