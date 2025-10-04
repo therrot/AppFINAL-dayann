@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, ImageBackground } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface AnimatedBackgroundProps {
   children: React.ReactNode;
@@ -8,6 +9,8 @@ interface AnimatedBackgroundProps {
 }
 
 export const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({ children, style }) => {
+  const { theme } = useTheme();
+  
   return (
     <View style={[styles.container, style]}>
       <ImageBackground
@@ -16,7 +19,7 @@ export const AnimatedBackground: React.FC<AnimatedBackgroundProps> = ({ children
         blurRadius={8}
       >
         <LinearGradient
-          colors={['rgba(46, 125, 50, 0.98)', 'rgba(33, 150, 243, 0.96)', 'rgba(0, 0, 0, 0.85)']}
+          colors={theme.background}
           style={styles.gradient}
         >
           {children}
