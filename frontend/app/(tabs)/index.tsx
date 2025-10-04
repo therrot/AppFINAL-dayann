@@ -49,9 +49,19 @@ export default function HomeScreen() {
     }
   };
 
+  const loadReportesPublicos = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/reportes-publicos`);
+      setReportesPublicos(response.data.reportes.slice(0, 3)); // Show only 3 latest reports
+    } catch (error) {
+      console.log('Error loading public reports:', error);
+    }
+  };
+
   const onRefresh = async () => {
     setRefreshing(true);
     await loadNoticias();
+    await loadReportesPublicos();
     setRefreshing(false);
   };
 
