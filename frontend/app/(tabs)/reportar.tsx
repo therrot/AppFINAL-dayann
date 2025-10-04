@@ -162,6 +162,7 @@ export default function ReportarScreen() {
         latitud: location.coords.latitude,
         longitud: location.coords.longitude,
         direccion: direccion,
+        usuario_id: user?.id || '',
       };
 
       const response = await axios.post(`${API_URL}/api/reportes`, reportData);
