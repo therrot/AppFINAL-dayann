@@ -37,6 +37,11 @@ class UserRegister(BaseModel):
     password: str
     latitud: Optional[float] = None
     longitud: Optional[float] = None
+    foto_perfil: Optional[str] = None
+
+class UserUpdate(BaseModel):
+    nombre: Optional[str] = None
+    foto_perfil: Optional[str] = None
 
 class UserLogin(BaseModel):
     email: str
