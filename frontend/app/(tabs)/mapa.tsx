@@ -198,6 +198,16 @@ export default function MapaScreen() {
                       <Ionicons name="chevron-forward" size={20} color="#666" />
                     </View>
                     
+                    {reporte.foto_base64 && (
+                      <View style={styles.reportPhotoContainer}>
+                        <Image 
+                          source={{ uri: reporte.foto_base64 }}
+                          style={styles.reportPhoto}
+                          resizeMode="cover"
+                        />
+                      </View>
+                    )}
+                    
                     {reporte.direccion && (
                       <View style={styles.reportLocation}>
                         <Ionicons name="location-outline" size={14} color="#4CAF50" />
