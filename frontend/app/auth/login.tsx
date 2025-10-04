@@ -58,7 +58,7 @@ export default function Login() {
         blurRadius={2}
       >
         <LinearGradient
-          colors={['rgba(46, 125, 50, 0.98)', 'rgba(33, 150, 243, 0.96)', 'rgba(0, 0, 0, 0.85)']}>
+          colors={['rgba(46, 125, 50, 0.98)', 'rgba(33, 150, 243, 0.96)', 'rgba(0, 0, 0, 0.85)']}
           style={styles.gradient}
         >
           <KeyboardAvoidingView 
