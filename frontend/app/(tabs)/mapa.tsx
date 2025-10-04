@@ -8,40 +8,15 @@ import {
   TouchableOpacity,
   RefreshControl,
   Modal,
+  Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
+import MapView, { Marker } from 'react-native-maps';
 import { AnimatedBackground } from '../../components/AnimatedBackground';
 
 const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
-
-// Mapa simulado para web, en dispositivo real se usará react-native-maps
-const MapView = ({ children, style, ...props }: any) => (
-  <View style={[style, { backgroundColor: '#e8f5e9', justifyContent: 'center', alignItems: 'center' }]}>
-    <Text style={{ color: '#4CAF50', fontSize: 16, fontWeight: 'bold' }}>🗺️ Mapa de Ventanilla</Text>
-    <Text style={{ color: '#666', fontSize: 12, marginTop: 4 }}>Vista de reportes ambientales</Text>
-    <ScrollView style={{ maxHeight: 200, marginTop: 10 }}>
-      {children}
-    </ScrollView>
-  </View>
-);
-
-const Marker = ({ coordinate, title, description, onPress }: any) => (
-  <TouchableOpacity
-    style={{
-      marginVertical: 5,
-      padding: 10,
-      backgroundColor: '#FF5722',
-      borderRadius: 8,
-      minWidth: 200,
-    }}
-    onPress={onPress}
-  >
-    <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>📍 {title}</Text>
-    <Text style={{ color: 'white', fontSize: 10 }}>{description}</Text>
-  </TouchableOpacity>
-);
 
 export default function MapaScreen() {
   const [reportes, setReportes] = useState([]);
