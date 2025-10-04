@@ -292,8 +292,7 @@ export default function MapaScreen() {
               </ImageBackground>
             </SafeAreaView>
           </Modal>
-        </LinearGradient>
-      </ImageBackground>
+      </AnimatedBackground>
     </SafeAreaView>
   );
 }
