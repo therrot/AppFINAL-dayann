@@ -347,13 +347,22 @@ export default function PerfilScreen() {
                 </LinearGradient>
               </TouchableOpacity>
               
-              <TouchableOpacity style={styles.actionButton}>
+              <TouchableOpacity 
+                style={styles.actionButton}
+                onPress={() => {
+                  Alert.alert(
+                    'Términos y Condiciones',
+                    'VENTANILLA RECICLA CONTIGO v1.0.0\n\nCreado por: Fernando Rufasto\n\nAplicación móvil para el cuidado del medio ambiente en Ventanilla, Lima, Perú.\n\n• Los reportes enviados serán públicos para la comunidad\n• Tu privacidad es importante para nosotros\n• El sistema de puntos e incentivos está sujeto a disponibilidad\n\nContacto: Municipalidad de Ventanilla\n\n© 2024 Fernando Rufasto. Todos los derechos reservados.',
+                    [{ text: 'Aceptar' }]
+                  );
+                }}
+              >
                 <LinearGradient
                   colors={['#4CAF50', '#388E3C']}
                   style={styles.actionButtonGradient}
                 >
-                  <Ionicons name="help-circle" size={20} color="white" />
-                  <Text style={styles.actionButtonText}>Ayuda</Text>
+                  <Ionicons name="document-text" size={20} color="white" />
+                  <Text style={styles.actionButtonText}>Términos</Text>
                 </LinearGradient>
               </TouchableOpacity>
             </View>
