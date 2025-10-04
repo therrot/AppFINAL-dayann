@@ -358,7 +358,29 @@ backend:
         comment: "✅ VERIFIED: GET /api/reportes-publicos returns 14 public reports with foto_base64 field containing visible photos and user names. Public photos functionality confirmed working after map removal."
 
 frontend:
-  # No frontend testing performed as per instructions
+  - task: "Remove Map Tab and Functionality"
+    implemented: true
+    working: true
+    file: "frontend/app/(tabs)/_layout.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "✅ Successfully removed 'mapa' tab from navigation layout and deleted mapa.tsx file that was causing errors with react-native-maps."
+
+  - task: "Add Public Reports with Photos to Home Screen"
+    implemented: true
+    working: true
+    file: "frontend/app/(tabs)/index.tsx"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "main"
+        comment: "✅ Added 'Reportes de la Comunidad' section to home screen that displays public reports with photos using GET /api/reportes-publicos. Photos are displayed using Image component with foto_base64 data."
 
 metadata:
   created_by: "testing_agent"
