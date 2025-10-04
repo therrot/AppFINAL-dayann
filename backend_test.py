@@ -32,412 +32,386 @@ print(f"📍 Backend URL: {BASE_URL}")
 print(f"🔗 API URL: {API_URL}")
 print("=" * 60)
 
+# Test data for Ventanilla, Lima, Peru
+test_users = [
+    {
+        "nombre": "Carmen Flores",
+        "email": "carmen.flores@ventanilla.pe",
+        "password": "EcoVentanilla2024",
+        "latitud": -11.8746,
+        "longitud": -77.1539
+    },
+    {
+        "nombre": "Roberto Mendoza", 
+        "email": "roberto.mendoza@ventanilla.pe",
+        "password": "ReciclaLima2024",
+        "latitud": -11.8756,
+        "longitud": -77.1549
+    }
+]
+
+# Sample base64 image (small test image)
+sample_image_b64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
+
 class TestResults:
     def __init__(self):
         self.passed = 0
         self.failed = 0
         self.errors = []
+        self.critical_errors = []
     
     def add_pass(self, test_name):
         self.passed += 1
-        print(f"✅ {test_name}")
+        print(f"  ✅ {test_name}")
     
-    def add_fail(self, test_name, error):
+    def add_fail(self, test_name, error, critical=False):
         self.failed += 1
-        self.errors.append(f"{test_name}: {error}")
-        print(f"❌ {test_name}: {error}")
+        if critical:
+            self.critical_errors.append(f"{test_name}: {error}")
+            print(f"  ❌ CRITICAL: {test_name}: {error}")
+        else:
+            self.errors.append(f"{test_name}: {error}")
+            print(f"  ❌ {test_name}: {error}")
     
     def summary(self):
         total = self.passed + self.failed
         print(f"\n{'='*60}")
         print(f"TEST SUMMARY: {self.passed}/{total} tests passed")
+        if self.critical_errors:
+            print(f"\nCRITICAL FAILURES:")
+            for error in self.critical_errors:
+                print(f"  - {error}")
         if self.errors:
-            print(f"\nFAILED TESTS:")
+            print(f"\nOTHER FAILURES:")
             for error in self.errors:
                 print(f"  - {error}")
         print(f"{'='*60}")
 
 results = TestResults()
 
-# Test data for Ventanilla, Lima, Peru
-test_user_data = {
-    "nombre": "Carmen Rodriguez",
-    "email": "carmen.rodriguez@gmail.com", 
-    "password": "MiClave123!",
-    "latitud": -11.8746,  # Ventanilla coordinates
-    "longitud": -77.1539
-}
-
-test_user_data_2 = {
-    "nombre": "Miguel Santos",
-    "email": "miguel.santos@hotmail.com",
-    "password": "Recicla2024",
-    "latitud": -11.8800,
-    "longitud": -77.1600
-}
-
-# Sample base64 image (small test image)
-sample_image_b64 = "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg=="
-
-def test_root_endpoint():
-    """Test root endpoint"""
+def test_api_endpoint(method, endpoint, data=None, headers=None, expected_status=200):
+    """Helper function to test API endpoints"""
+    url = f"{API_URL}{endpoint}"
     try:
-        response = requests.get(BASE_URL)
-        if response.status_code == 200:
-            data = response.json()
-            if "VENTANILLA RECICLA CONTIGO" in data.get("message", ""):
-                results.add_pass("Root endpoint")
-                return True
-            else:
-                results.add_fail("Root endpoint", f"Unexpected message: {data}")
-        else:
-            results.add_fail("Root endpoint", f"Status {response.status_code}")
-    except Exception as e:
-        results.add_fail("Root endpoint", str(e))
-    return False
-
-def test_user_registration():
-    """Test user registration endpoint"""
-    try:
-        response = requests.post(f"{API_URL}/usuarios", json=test_user_data)
-        if response.status_code == 200:
-            data = response.json()
-            if "token" in data and "user_id" in data:
-                results.add_pass("User registration")
-                return data["user_id"], data["token"]
-            else:
-                results.add_fail("User registration", f"Missing token or user_id: {data}")
-        else:
-            results.add_fail("User registration", f"Status {response.status_code}: {response.text}")
-    except Exception as e:
-        results.add_fail("User registration", str(e))
-    return None, None
-
-def test_duplicate_user_registration():
-    """Test duplicate user registration should fail"""
-    try:
-        response = requests.post(f"{API_URL}/usuarios", json=test_user_data)
-        if response.status_code == 400:
-            data = response.json()
-            if "ya está registrado" in data.get("detail", ""):
-                results.add_pass("Duplicate user registration prevention")
-                return True
-            else:
-                results.add_fail("Duplicate user registration prevention", f"Wrong error message: {data}")
-        else:
-            results.add_fail("Duplicate user registration prevention", f"Should return 400, got {response.status_code}")
-    except Exception as e:
-        results.add_fail("Duplicate user registration prevention", str(e))
-    return False
-
-def test_user_login():
-    """Test user login endpoint"""
-    try:
-        login_data = {
-            "email": test_user_data["email"],
-            "password": test_user_data["password"]
-        }
-        response = requests.post(f"{API_URL}/login", json=login_data)
-        if response.status_code == 200:
-            data = response.json()
-            if "token" in data and "user_id" in data:
-                results.add_pass("User login")
-                return data["user_id"], data["token"]
-            else:
-                results.add_fail("User login", f"Missing token or user_id: {data}")
-        else:
-            results.add_fail("User login", f"Status {response.status_code}: {response.text}")
-    except Exception as e:
-        results.add_fail("User login", str(e))
-    return None, None
-
-def test_invalid_login():
-    """Test login with invalid credentials"""
-    try:
-        login_data = {
-            "email": test_user_data["email"],
-            "password": "wrong_password"
-        }
-        response = requests.post(f"{API_URL}/login", json=login_data)
-        if response.status_code == 401:
-            results.add_pass("Invalid login rejection")
-            return True
-        else:
-            results.add_fail("Invalid login rejection", f"Should return 401, got {response.status_code}")
-    except Exception as e:
-        results.add_fail("Invalid login rejection", str(e))
-    return False
-
-def test_get_user_details(user_id):
-    """Test get user details endpoint"""
-    if not user_id:
-        results.add_fail("Get user details", "No user_id provided")
-        return False
-    
-    try:
-        response = requests.get(f"{API_URL}/usuarios/{user_id}")
-        if response.status_code == 200:
-            data = response.json()
-            if "nombre" in data and "email" in data and "puntos" in data:
-                results.add_pass("Get user details")
-                return True
-            else:
-                results.add_fail("Get user details", f"Missing required fields: {data}")
-        else:
-            results.add_fail("Get user details", f"Status {response.status_code}: {response.text}")
-    except Exception as e:
-        results.add_fail("Get user details", str(e))
-    return False
-
-def test_create_report():
-    """Test create environmental report endpoint"""
-    try:
-        report_data = {
-            "descripcion": "Basura acumulada en la esquina de Av. Néstor Gambetta con Jr. Los Pinos. Hay residuos orgánicos y plásticos que necesitan recolección urgente.",
-            "foto_base64": sample_image_b64,
-            "latitud": -11.8746,
-            "longitud": -77.1539,
-            "direccion": "Av. Néstor Gambetta 1234, Ventanilla, Callao"
-        }
-        response = requests.post(f"{API_URL}/reportes", json=report_data)
-        if response.status_code == 200:
-            data = response.json()
-            if "reporte_id" in data and "puntos_ganados" in data:
-                results.add_pass("Create environmental report")
-                return data["reporte_id"]
-            else:
-                results.add_fail("Create environmental report", f"Missing required fields: {data}")
-        else:
-            results.add_fail("Create environmental report", f"Status {response.status_code}: {response.text}")
-    except Exception as e:
-        results.add_fail("Create environmental report", str(e))
-    return None
-
-def test_get_user_reports(user_id):
-    """Test get user reports endpoint"""
-    if not user_id:
-        results.add_fail("Get user reports", "No user_id provided")
-        return False
-    
-    try:
-        response = requests.get(f"{API_URL}/reportes/{user_id}")
-        if response.status_code == 200:
-            data = response.json()
-            if "reportes" in data and isinstance(data["reportes"], list):
-                results.add_pass("Get user reports")
-                return True
-            else:
-                results.add_fail("Get user reports", f"Invalid response format: {data}")
-        else:
-            results.add_fail("Get user reports", f"Status {response.status_code}: {response.text}")
-    except Exception as e:
-        results.add_fail("Get user reports", str(e))
-    return False
-
-def test_get_incentives():
-    """Test get available incentives endpoint"""
-    try:
-        response = requests.get(f"{API_URL}/incentivos")
-        if response.status_code == 200:
-            data = response.json()
-            if "incentivos" in data and isinstance(data["incentivos"], list) and len(data["incentivos"]) > 0:
-                # Check if incentives have required fields
-                incentive = data["incentivos"][0]
-                if all(field in incentive for field in ["id", "nombre", "descripcion", "puntos_requeridos"]):
-                    results.add_pass("Get available incentives")
-                    return data["incentivos"]
-                else:
-                    results.add_fail("Get available incentives", f"Missing required fields in incentive: {incentive}")
-            else:
-                results.add_fail("Get available incentives", f"Invalid response format: {data}")
-        else:
-            results.add_fail("Get available incentives", f"Status {response.status_code}: {response.text}")
-    except Exception as e:
-        results.add_fail("Get available incentives", str(e))
-    return None
-
-def test_redeem_incentive(user_id, incentives):
-    """Test redeem incentive endpoint"""
-    if not user_id or not incentives:
-        results.add_fail("Redeem incentive", "No user_id or incentives provided")
-        return False
-    
-    try:
-        redeem_data = {
-            "incentivo_id": incentives[0]["id"],
-            "usuario_id": user_id
-        }
-        response = requests.post(f"{API_URL}/canjear", json=redeem_data)
-        if response.status_code == 200:
-            data = response.json()
-            if "message" in data and "fecha_canje" in data:
-                results.add_pass("Redeem incentive")
-                return True
-            else:
-                results.add_fail("Redeem incentive", f"Missing required fields: {data}")
-        else:
-            results.add_fail("Redeem incentive", f"Status {response.status_code}: {response.text}")
-    except Exception as e:
-        results.add_fail("Redeem incentive", str(e))
-    return False
-
-def test_get_education_content():
-    """Test get environmental education content endpoint"""
-    try:
-        response = requests.get(f"{API_URL}/educacion")
-        if response.status_code == 200:
-            data = response.json()
-            if "contenido" in data and isinstance(data["contenido"], list) and len(data["contenido"]) > 0:
-                # Check if content has required fields
-                content = data["contenido"][0]
-                if all(field in content for field in ["id", "titulo", "tipo", "contenido"]):
-                    results.add_pass("Get environmental education content")
-                    return True
-                else:
-                    results.add_fail("Get environmental education content", f"Missing required fields: {content}")
-            else:
-                results.add_fail("Get environmental education content", f"Invalid response format: {data}")
-        else:
-            results.add_fail("Get environmental education content", f"Status {response.status_code}: {response.text}")
-    except Exception as e:
-        results.add_fail("Get environmental education content", str(e))
-    return False
-
-def test_get_news():
-    """Test get environmental news endpoint"""
-    try:
-        response = requests.get(f"{API_URL}/noticias")
-        if response.status_code == 200:
-            data = response.json()
-            if "noticias" in data and isinstance(data["noticias"], list) and len(data["noticias"]) > 0:
-                # Check if news have required fields
-                news = data["noticias"][0]
-                if all(field in news for field in ["id", "titulo", "contenido", "fecha"]):
-                    results.add_pass("Get environmental news")
-                    return True
-                else:
-                    results.add_fail("Get environmental news", f"Missing required fields: {news}")
-            else:
-                results.add_fail("Get environmental news", f"Invalid response format: {data}")
-        else:
-            results.add_fail("Get environmental news", f"Status {response.status_code}: {response.text}")
-    except Exception as e:
-        results.add_fail("Get environmental news", str(e))
-    return False
-
-def test_get_ranking():
-    """Test get user ranking endpoint"""
-    try:
-        response = requests.get(f"{API_URL}/ranking")
-        if response.status_code == 200:
-            data = response.json()
-            if "ranking" in data and isinstance(data["ranking"], list) and len(data["ranking"]) > 0:
-                # Check if ranking has required fields
-                rank = data["ranking"][0]
-                if all(field in rank for field in ["posicion", "nombre", "puntos"]):
-                    results.add_pass("Get user ranking")
-                    return True
-                else:
-                    results.add_fail("Get user ranking", f"Missing required fields: {rank}")
-            else:
-                results.add_fail("Get user ranking", f"Invalid response format: {data}")
-        else:
-            results.add_fail("Get user ranking", f"Status {response.status_code}: {response.text}")
-    except Exception as e:
-        results.add_fail("Get user ranking", str(e))
-    return False
-
-def test_get_notifications(user_id):
-    """Test get user notifications endpoint"""
-    if not user_id:
-        results.add_fail("Get user notifications", "No user_id provided")
-        return False
-    
-    try:
-        response = requests.get(f"{API_URL}/notificaciones/{user_id}")
-        if response.status_code == 200:
-            data = response.json()
-            if "notificaciones" in data and isinstance(data["notificaciones"], list):
-                results.add_pass("Get user notifications")
-                return True
-            else:
-                results.add_fail("Get user notifications", f"Invalid response format: {data}")
-        else:
-            results.add_fail("Get user notifications", f"Status {response.status_code}: {response.text}")
-    except Exception as e:
-        results.add_fail("Get user notifications", str(e))
-    return False
-
-def test_mongodb_connection():
-    """Test MongoDB connection by checking if we can create and retrieve data"""
-    try:
-        # Register a test user to verify DB connection
-        test_user = {
-            "nombre": "Test DB Connection",
-            "email": f"test_db_{datetime.now().timestamp()}@test.com",
-            "password": "TestDB123"
-        }
+        if method.upper() == "GET":
+            response = requests.get(url, headers=headers, timeout=10)
+        elif method.upper() == "POST":
+            response = requests.post(url, json=data, headers=headers, timeout=10)
+        elif method.upper() == "DELETE":
+            response = requests.delete(url, headers=headers, timeout=10)
         
-        response = requests.post(f"{API_URL}/usuarios", json=test_user)
-        if response.status_code == 200:
-            data = response.json()
-            user_id = data.get("user_id")
-            
-            # Try to retrieve the user
-            get_response = requests.get(f"{API_URL}/usuarios/{user_id}")
-            if get_response.status_code == 200:
-                results.add_pass("MongoDB connection and data persistence")
-                return True
-            else:
-                results.add_fail("MongoDB connection and data persistence", "Could not retrieve created user")
+        if response.status_code == expected_status:
+            try:
+                return response.json()
+            except:
+                return response.text
         else:
-            results.add_fail("MongoDB connection and data persistence", f"Could not create test user: {response.text}")
+            print(f"    Status: {response.status_code}, Expected: {expected_status}")
+            print(f"    Response: {response.text[:200]}...")
+            return None
+            
+    except requests.exceptions.RequestException as e:
+        print(f"    CONNECTION ERROR: {str(e)}")
+        return None
     except Exception as e:
-        results.add_fail("MongoDB connection and data persistence", str(e))
-    return False
+        print(f"    ERROR: {str(e)}")
+        return None
 
-def main():
-    """Run all backend tests"""
-    print("🧪 Starting VENTANILLA RECICLA CONTIGO Backend API Tests")
-    print(f"Backend URL: {BASE_URL}")
-    print(f"API URL: {API_URL}")
-    print("="*60)
+def test_new_functionality():
+    print("\n🔍 TESTING NEW FUNCTIONALITY")
+    print("=" * 60)
     
-    # Test basic connectivity
-    if not test_root_endpoint():
-        print("❌ Cannot connect to backend. Stopping tests.")
+    # Store user data for later tests
+    created_users = []
+    
+    # Test 1: User Registration (to get users for testing reports)
+    print("\n1️⃣ TESTING USER REGISTRATION")
+    print("-" * 40)
+    
+    for i, user_data in enumerate(test_users):
+        print(f"\n👤 Creating User {i+1}: {user_data['nombre']}")
+        result = test_api_endpoint("POST", "/usuarios", user_data)
+        if result and "user_id" in result:
+            created_users.append({
+                "user_id": result["user_id"],
+                "token": result["token"],
+                "nombre": user_data["nombre"],
+                "email": user_data["email"]
+            })
+            print(f"    🆔 User ID: {result['user_id']}")
+            print(f"    🎯 Initial Points: {result['usuario']['puntos']}")
+            results.add_pass(f"User registration - {user_data['nombre']}")
+        else:
+            results.add_fail(f"User registration - {user_data['nombre']}", "Failed to create user", critical=True)
+    
+    if not created_users:
+        results.add_fail("User Registration", "No users created. Cannot proceed with report testing.", critical=True)
         return
     
-    # Test MongoDB connection
-    test_mongodb_connection()
+    # Test 2: NEW FUNCTIONALITY - Create Reports with usuario_id (20 points system)
+    print("\n2️⃣ TESTING NEW REPORTS SYSTEM (20 POINTS)")
+    print("-" * 40)
     
-    # Test authentication endpoints
-    user_id, token = test_user_registration()
-    test_duplicate_user_registration()
+    report_ids = []
+    for i, user in enumerate(created_users):
+        print(f"\n📝 Creating Report for {user['nombre']}")
+        
+        # Get user points before report
+        user_before = test_api_endpoint("GET", f"/usuarios/{user['user_id']}")
+        points_before = user_before.get("puntos", 0) if user_before else 0
+        reports_before = user_before.get("reportes_enviados", 0) if user_before else 0
+        
+        print(f"    📊 Points before: {points_before}")
+        print(f"    📊 Reports before: {reports_before}")
+        
+        report_data = {
+            "descripcion": f"Basura acumulada en Av. Néstor Gambetta, Ventanilla - Reporte #{i+1}",
+            "foto_base64": sample_image_b64,
+            "latitud": -11.8746 + (i * 0.001),
+            "longitud": -77.1539 + (i * 0.001),
+            "direccion": f"Av. Néstor Gambetta {100 + i*50}, Ventanilla, Lima",
+            "usuario_id": user["user_id"]
+        }
+        
+        result = test_api_endpoint("POST", "/reportes", report_data)
+        if result:
+            report_ids.append(result.get("reporte_id"))
+            points_awarded = result.get("puntos_ganados", 0)
+            print(f"    🎯 Points awarded: {points_awarded}")
+            
+            # Verify it's 20 points (NEW FUNCTIONALITY)
+            if points_awarded == 20:
+                results.add_pass(f"20 points system - {user['nombre']}")
+            else:
+                results.add_fail(f"20 points system - {user['nombre']}", f"Expected 20, got {points_awarded}", critical=True)
+            
+            # Check user points after report
+            user_after = test_api_endpoint("GET", f"/usuarios/{user['user_id']}")
+            if user_after:
+                points_after = user_after.get("puntos", 0)
+                reports_after = user_after.get("reportes_enviados", 0)
+                
+                print(f"    📊 Points after: {points_after}")
+                print(f"    📊 Reports after: {reports_after}")
+                
+                # Verify points increase
+                if points_after == points_before + 20:
+                    results.add_pass(f"User points update - {user['nombre']}")
+                else:
+                    results.add_fail(f"User points update - {user['nombre']}", f"Expected {points_before + 20}, got {points_after}", critical=True)
+                
+                # Verify reports counter increase
+                if reports_after == reports_before + 1:
+                    results.add_pass(f"Reports counter update - {user['nombre']}")
+                else:
+                    results.add_fail(f"Reports counter update - {user['nombre']}", f"Expected {reports_before + 1}, got {reports_after}", critical=True)
+        else:
+            results.add_fail(f"Create report - {user['nombre']}", "Failed to create report", critical=True)
     
-    # Test login with the registered user
-    login_user_id, login_token = test_user_login()
-    test_invalid_login()
+    # Test 3: NEW FUNCTIONALITY - Public Reports System
+    print("\n3️⃣ TESTING PUBLIC REPORTS SYSTEM")
+    print("-" * 40)
     
-    # Use the user_id from registration or login
-    active_user_id = user_id or login_user_id
+    print("\n📋 Testing GET /api/reportes-publicos")
+    public_reports = test_api_endpoint("GET", "/reportes-publicos")
+    if public_reports and "reportes" in public_reports:
+        reports_list = public_reports["reportes"]
+        print(f"    📊 Found {len(reports_list)} public reports")
+        
+        if reports_list:
+            sample_report = reports_list[0]
+            print(f"    🔍 Sample report structure:")
+            
+            # Check required fields for public reports
+            required_fields = ["descripcion", "latitud", "longitud", "fecha", "estado", "publico", "usuario_nombre"]
+            missing_fields = []
+            
+            for field in required_fields:
+                if field in sample_report:
+                    print(f"      ✅ {field}: {sample_report[field]}")
+                else:
+                    missing_fields.append(field)
+                    print(f"      ❌ Missing: {field}")
+            
+            if not missing_fields:
+                results.add_pass("Public reports structure")
+            else:
+                results.add_fail("Public reports structure", f"Missing fields: {missing_fields}", critical=True)
+            
+            # Verify report is public and active
+            if sample_report.get("publico") == True:
+                results.add_pass("Reports marked as public")
+            else:
+                results.add_fail("Reports marked as public", f"Expected True, got {sample_report.get('publico')}", critical=True)
+                
+            if sample_report.get("estado") == "activo":
+                results.add_pass("Reports marked as active")
+            else:
+                results.add_fail("Reports marked as active", f"Expected 'activo', got {sample_report.get('estado')}", critical=True)
+            
+            # Verify user names are included
+            if "usuario_nombre" in sample_report and sample_report["usuario_nombre"]:
+                results.add_pass("User names in public reports")
+            else:
+                results.add_fail("User names in public reports", "User names missing or empty", critical=True)
+        else:
+            results.add_fail("Public reports availability", "No public reports found", critical=True)
+    else:
+        results.add_fail("Public reports endpoint", "Failed to get public reports", critical=True)
     
-    # Test user details
-    test_get_user_details(active_user_id)
+    # Test 4: NEW FUNCTIONALITY - Map Reports System
+    print("\n📍 Testing GET /api/mapa-reportes")
+    map_reports = test_api_endpoint("GET", "/mapa-reportes")
+    if map_reports and "reportes" in map_reports:
+        reports_list = map_reports["reportes"]
+        print(f"    📊 Found {len(reports_list)} map reports")
+        
+        if reports_list:
+            sample_report = reports_list[0]
+            print(f"    🔍 Sample map report structure:")
+            
+            # Check required fields for map reports
+            map_fields = ["latitud", "longitud", "descripcion", "fecha", "usuario_nombre"]
+            missing_fields = []
+            
+            for field in map_fields:
+                if field in sample_report:
+                    print(f"      ✅ {field}: {sample_report[field]}")
+                else:
+                    missing_fields.append(field)
+                    print(f"      ❌ Missing: {field}")
+            
+            if not missing_fields:
+                results.add_pass("Map reports structure")
+            else:
+                results.add_fail("Map reports structure", f"Missing fields: {missing_fields}", critical=True)
+            
+            # Verify no foto_base64 in map reports (performance optimization)
+            if "foto_base64" not in sample_report:
+                results.add_pass("Map reports performance optimization")
+            else:
+                results.add_fail("Map reports performance optimization", "Photo data included (may affect performance)")
+        else:
+            results.add_fail("Map reports availability", "No map reports found", critical=True)
+    else:
+        results.add_fail("Map reports endpoint", "Failed to get map reports", critical=True)
     
-    # Test reports endpoints
-    report_id = test_create_report()
-    test_get_user_reports(active_user_id)
+    # Test 5: NEW FUNCTIONALITY - Terms and Conditions
+    print("\n4️⃣ TESTING NEW TERMS ENDPOINT")
+    print("-" * 40)
     
-    # Test incentives endpoints
-    incentives = test_get_incentives()
-    test_redeem_incentive(active_user_id, incentives)
+    print("\n📜 Testing GET /api/terminos")
+    terms = test_api_endpoint("GET", "/terminos")
+    if terms:
+        print(f"    🔍 Terms structure:")
+        
+        # Check required fields
+        required_terms_fields = ["app_name", "creado_por", "version", "descripcion", "terminos"]
+        missing_fields = []
+        
+        for field in required_terms_fields:
+            if field in terms:
+                if field == "creado_por":
+                    if terms[field] == "Fernando Rufasto":
+                        print(f"      ✅ {field}: {terms[field]}")
+                        results.add_pass("Terms creator info")
+                    else:
+                        print(f"      ❌ {field}: Expected 'Fernando Rufasto', got '{terms[field]}'")
+                        results.add_fail("Terms creator info", f"Expected 'Fernando Rufasto', got '{terms[field]}'")
+                elif field == "app_name":
+                    if terms[field] == "VENTANILLA RECICLA CONTIGO":
+                        print(f"      ✅ {field}: {terms[field]}")
+                        results.add_pass("Terms app name")
+                    else:
+                        print(f"      ❌ {field}: Expected 'VENTANILLA RECICLA CONTIGO', got '{terms[field]}'")
+                        results.add_fail("Terms app name", f"Expected 'VENTANILLA RECICLA CONTIGO', got '{terms[field]}'")
+                else:
+                    print(f"      ✅ {field}: {terms[field]}")
+            else:
+                missing_fields.append(field)
+                print(f"      ❌ Missing: {field}")
+        
+        if not missing_fields:
+            results.add_pass("Terms structure")
+        else:
+            results.add_fail("Terms structure", f"Missing fields: {missing_fields}", critical=True)
+        
+        # Check terms array
+        if "terminos" in terms and isinstance(terms["terminos"], list) and len(terms["terminos"]) > 0:
+            results.add_pass("Terms array content")
+        else:
+            results.add_fail("Terms array content", "Terms array missing or empty", critical=True)
+    else:
+        results.add_fail("Terms endpoint", "Failed to get terms and conditions", critical=True)
     
-    # Test education and news endpoints
-    test_get_education_content()
-    test_get_news()
-    test_get_ranking()
-    test_get_notifications(active_user_id)
+    # Test 6: Verify Enhanced Reports Structure
+    print("\n5️⃣ TESTING ENHANCED REPORTS STRUCTURE")
+    print("-" * 40)
+    
+    if created_users:
+        user = created_users[0]
+        print(f"\n📋 Testing GET /api/reportes/{user['user_id']}")
+        user_reports = test_api_endpoint("GET", f"/reportes/{user['user_id']}")
+        
+        if user_reports and "reportes" in user_reports:
+            reports_list = user_reports["reportes"]
+            print(f"    📊 Found {len(reports_list)} user reports")
+            
+            if reports_list:
+                sample_report = reports_list[0]
+                print(f"    🔍 Enhanced report structure:")
+                
+                # Check enhanced fields
+                enhanced_fields = ["usuario_id", "publico", "estado", "descripcion", "latitud", "longitud"]
+                missing_fields = []
+                
+                for field in enhanced_fields:
+                    if field in sample_report:
+                        print(f"      ✅ {field}: {sample_report[field]}")
+                    else:
+                        missing_fields.append(field)
+                        print(f"      ❌ Missing: {field}")
+                
+                if not missing_fields:
+                    results.add_pass("Enhanced reports structure")
+                else:
+                    results.add_fail("Enhanced reports structure", f"Missing fields: {missing_fields}", critical=True)
+                
+                # Verify enhanced values
+                if sample_report.get("usuario_id") == user["user_id"]:
+                    results.add_pass("Usuario_id linking")
+                else:
+                    results.add_fail("Usuario_id linking", f"Expected {user['user_id']}, got {sample_report.get('usuario_id')}", critical=True)
+            else:
+                results.add_fail("User reports availability", "No user reports found", critical=True)
+        else:
+            results.add_fail("User reports endpoint", "Failed to get user reports", critical=True)
+    
+    print("\n" + "=" * 60)
+    print("🏁 NEW FUNCTIONALITY TESTING COMPLETED")
+    print("=" * 60)
+
+def main():
+    """Run new functionality tests"""
+    print("\n🧪 Starting VENTANILLA RECICLA CONTIGO New Functionality Tests")
+    print(f"Backend URL: {BASE_URL}")
+    print(f"API URL: {API_URL}")
+    
+    # Test basic connectivity first
+    print("\n🔌 Testing basic connectivity...")
+    try:
+        response = requests.get(BASE_URL, timeout=5)
+        if response.status_code == 200:
+            print("  ✅ Backend is accessible")
+        else:
+            print(f"  ❌ Backend returned status {response.status_code}")
+            return 1
+    except Exception as e:
+        print(f"  ❌ Cannot connect to backend: {e}")
+        return 1
+    
+    # Run new functionality tests
+    test_new_functionality()
     
     # Print summary
     results.summary()
