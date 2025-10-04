@@ -20,11 +20,13 @@ const API_URL = process.env.EXPO_PUBLIC_BACKEND_URL;
 export default function HomeScreen() {
   const [user, setUser] = useState<any>(null);
   const [noticias, setNoticias] = useState([]);
+  const [reportesPublicos, setReportesPublicos] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     loadUserData();
     loadNoticias();
+    loadReportesPublicos();
   }, []);
 
   const loadUserData = async () => {
