@@ -249,13 +249,61 @@ backend:
         agent: "testing"
         comment: "✅ MongoDB connection working correctly. Data persistence verified through user creation and retrieval tests."
 
+  - task: "Updated Points System (20 points per report)"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ NEW FUNCTIONALITY: 20 points system working correctly. POST /api/reportes now awards 20 points per report (previously 10). User points and reportes_enviados counter both update correctly. Tested with multiple users and verified database updates."
+
+  - task: "Public Reports System"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ NEW FUNCTIONALITY: Public reports system working correctly. GET /api/reportes-publicos returns reports marked as publico=True and estado=activo with user names included. GET /api/mapa-reportes optimized for map visualization (excludes photo data for performance). Both endpoints tested successfully."
+
+  - task: "Terms and Conditions Endpoint"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ NEW FUNCTIONALITY: GET /api/terminos endpoint working correctly. Returns complete terms structure with app_name='VENTANILLA RECICLA CONTIGO', creado_por='Fernando Rufasto', version, description, and terms array. All required fields present and correctly formatted."
+
+  - task: "Enhanced Reports with usuario_id"
+    implemented: true
+    working: true
+    file: "backend/server.py"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: true
+        agent: "testing"
+        comment: "✅ NEW FUNCTIONALITY: Enhanced reports structure working correctly. Reports now include usuario_id field, are marked as publico=True and estado=activo by default. User linking verified through GET /api/reportes/{usuario_id}. Database schema updated successfully."
+
 frontend:
   # No frontend testing performed as per instructions
 
 metadata:
   created_by: "testing_agent"
-  version: "1.0"
-  test_sequence: 1
+  version: "1.1"
+  test_sequence: 2
   run_ui: false
 
 test_plan:
@@ -267,3 +315,5 @@ test_plan:
 agent_communication:
   - agent: "testing"
     message: "Backend API testing completed successfully. All 12 backend endpoints tested and working correctly. MongoDB connection verified. All authentication, reports, incentives, education, and news endpoints functioning as expected with proper data validation and response formats. Used realistic data for Ventanilla, Lima, Peru recycling context."
+  - agent: "testing"
+    message: "NEW FUNCTIONALITY TESTING COMPLETED: All 4 new features tested and working correctly. ✅ Updated 20-point system per report ✅ Public reports system (reportes-publicos & mapa-reportes) ✅ Terms endpoint with Fernando Rufasto info ✅ Enhanced reports with usuario_id linking. Database updates verified, user points/counters working, public visibility confirmed. Total: 20/20 tests passed with realistic Ventanilla, Lima environmental data."
