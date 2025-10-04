@@ -260,10 +260,10 @@ def get_user_reportes(usuario_id: str):
 
 @app.get("/api/reportes-publicos")
 def get_reportes_publicos():
-    # Get all public reports with user info
+    # Get all public reports with user info INCLUDING photos
     reportes = list(db.reportes.find(
-        {"publico": True, "estado": "activo"},
-        {"foto_base64": 0}  # Exclude base64 for performance
+        {"publico": True, "estado": "activo"}
+        # Include foto_base64 so users can see the photos
     ))
     
     # Add user names to reports
