@@ -168,6 +168,46 @@ def get_user(user_id: str):
     except Exception:
         raise HTTPException(status_code=400, detail="ID de usuario inválido")
 
+@app.put("/api/usuarios/{user_id}")
+def update_user(user_id: str, user_update: UserUpdate):
+    from bson import ObjectId
+    try:
+        update_data = {}
+        
+        if user_update.nombre is not None:
+            update_data["nombre"] = user_update.nombre
+            
+        if user_update.foto_perfil is not None:
+            update_data["foto_perfil"] = user_update.foto_perfil
+            
+        if not update_data:
+            raise HTTPException(status_code=400, detail="No hay datos para actualizar")
+            
+        result = db.usuarios.update_one(
+            {"_id": ObjectId(user_id)},
+            {"$set": update_data}
+        )
+        
+        if result.matched_count == 0:
+            raise HTTPException(status_code=404, detail="Usuario no encontrado")
+            
+        # Return updated user data
+        updated_user = db.usuarios.find_one({"_id": ObjectId(user_id)})
+        return {
+            "id": str(updated_user["_id"]),
+            "nombre": updated_user["nombre"],
+            "email": updated_user["email"],
+            "puntos": updated_user.get("puntos", 0),
+            "reportes_enviados": updated_user.get("reportes_enviados", 0),
+            "logros": updated_user.get("logros", []),
+            "foto_perfil": updated_user.get("foto_perfil", None),
+            "fecha_registro": updated_user.get("fecha_registro"),
+            "message": "Perfil actualizado exitosamente"
+        }
+        
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Error actualizando usuario: {str(e)}")
+
 class ReporteCreateWithUser(BaseModel):
     descripcion: str
     foto_base64: str
