@@ -207,7 +207,62 @@ def create_reporte(reporte: ReporteCreateWithUser):
 
 @app.get("/api/reportes/{usuario_id}")
 def get_user_reportes(usuario_id: str):
-    reportes = list(db.reportes.find({}, {"_id": 0}))
+    reportes = list(db.reportes.find({"usuario_id": usuario_id}, {"_id": 0}))
+    return {"reportes": reportes}
+
+@app.get("/api/reportes-publicos")
+def get_reportes_publicos():
+    # Get all public reports with user info
+    reportes = list(db.reportes.find(
+        {"publico": True, "estado": "activo"},
+        {"foto_base64": 0}  # Exclude base64 for performance
+    ))
+    
+    # Add user names to reports
+    for reporte in reportes:
+        if reporte.get("usuario_id"):
+            from bson import ObjectId
+            try:
+                user = db.usuarios.find_one(
+                    {"_id": ObjectId(reporte["usuario_id"])},
+                    {"nombre": 1}
+                )
+                reporte["usuario_nombre"] = user.get("nombre", "Usuario Anónimo") if user else "Usuario Anónimo"
+            except:
+                reporte["usuario_nombre"] = "Usuario Anónimo"
+        reporte["_id"] = str(reporte["_id"])
+    
+    return {"reportes": reportes}
+
+@app.get("/api/mapa-reportes")
+def get_mapa_reportes():
+    # Get reports for map visualization
+    reportes = list(db.reportes.find(
+        {"publico": True, "estado": "activo"},
+        {
+            "latitud": 1, 
+            "longitud": 1, 
+            "descripcion": 1, 
+            "fecha": 1,
+            "direccion": 1,
+            "usuario_id": 1
+        }
+    ))
+    
+    # Add user names for map markers
+    for reporte in reportes:
+        if reporte.get("usuario_id"):
+            from bson import ObjectId
+            try:
+                user = db.usuarios.find_one(
+                    {"_id": ObjectId(reporte["usuario_id"])},
+                    {"nombre": 1}
+                )
+                reporte["usuario_nombre"] = user.get("nombre", "Usuario") if user else "Usuario"
+            except:
+                reporte["usuario_nombre"] = "Usuario"
+        reporte["_id"] = str(reporte["_id"])
+    
     return {"reportes": reportes}
 
 @app.get("/api/incentivos")
