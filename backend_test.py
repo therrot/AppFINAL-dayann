@@ -1,25 +1,36 @@
 #!/usr/bin/env python3
 """
 Backend API Testing for VENTANILLA RECICLA CONTIGO
-Tests all endpoints with realistic data for recycling app in Ventanilla, Lima, Peru
+Testing NEW FUNCTIONALITY: Updated points system, public reports, and new endpoints
 """
 
 import requests
 import json
 import base64
-import os
 from datetime import datetime
+import os
+from dotenv import load_dotenv
 import sys
 
-# Get backend URL - use localhost for testing since external URL routes to frontend
+load_dotenv()
+
+# Get backend URL from frontend .env file
 def get_backend_url():
-    # For testing, use localhost directly since the external URL routes to frontend
+    frontend_env_path = "/app/frontend/.env"
+    if os.path.exists(frontend_env_path):
+        with open(frontend_env_path, 'r') as f:
+            for line in f:
+                if line.startswith('EXPO_PUBLIC_BACKEND_URL='):
+                    return line.split('=')[1].strip()
     return "http://localhost:8001"
 
 BASE_URL = get_backend_url()
 API_URL = f"{BASE_URL}/api"
 
-print(f"Testing backend at: {API_URL}")
+print(f"🧪 Testing VENTANILLA RECICLA CONTIGO API - NEW FUNCTIONALITY")
+print(f"📍 Backend URL: {BASE_URL}")
+print(f"🔗 API URL: {API_URL}")
+print("=" * 60)
 
 class TestResults:
     def __init__(self):
