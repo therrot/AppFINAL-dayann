@@ -511,6 +511,39 @@ const styles = StyleSheet.create({
     marginLeft: 8,
     flex: 1,
   },
+  customMarker: {
+    backgroundColor: '#FF5722',
+    borderRadius: 20,
+    padding: 8,
+    borderWidth: 2,
+    borderColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  reportPhotoContainer: {
+    marginTop: 12,
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  reportPhoto: {
+    width: '100%',
+    height: 150,
+  },
+  modalPhotoContainer: {
+    marginVertical: 16,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  modalPhoto: {
+    width: '100%',
+    height: 200,
+  },
   bottomSpacing: {
     height: 20,
   },
