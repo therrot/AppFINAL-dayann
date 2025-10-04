@@ -161,8 +161,18 @@ def get_user(user_id: str):
     except Exception:
         raise HTTPException(status_code=400, detail="ID de usuario inválido")
 
+class ReporteCreateWithUser(BaseModel):
+    descripcion: str
+    foto_base64: str
+    latitud: float
+    longitud: float
+    direccion: Optional[str] = None
+    usuario_id: str
+
 @app.post("/api/reportes")
-def create_reporte(reporte: ReporteCreate):
+def create_reporte(reporte: ReporteCreateWithUser):
+    from bson import ObjectId
+    
     # Create new report
     new_reporte = {
         "descripcion": reporte.descripcion,
@@ -170,19 +180,29 @@ def create_reporte(reporte: ReporteCreate):
         "latitud": reporte.latitud,
         "longitud": reporte.longitud,
         "direccion": reporte.direccion,
+        "usuario_id": reporte.usuario_id,
         "fecha": datetime.utcnow(),
-        "estado": "pendiente"
+        "estado": "activo",
+        "publico": True
     }
     
     result = db.reportes.insert_one(new_reporte)
     
-    # Award points to user (assuming we get user_id somehow)
-    # For now, we'll return success
+    # Award 20 points to user
+    try:
+        db.usuarios.update_one(
+            {"_id": ObjectId(reporte.usuario_id)},
+            {
+                "$inc": {"puntos": 20, "reportes_enviados": 1}
+            }
+        )
+    except Exception as e:
+        print(f"Error updating user points: {e}")
     
     return {
-        "message": "Reporte enviado exitosamente",
+        "message": "Reporte enviado exitosamente y publicado para la comunidad",
         "reporte_id": str(result.inserted_id),
-        "puntos_ganados": 10
+        "puntos_ganados": 20
     }
 
 @app.get("/api/reportes/{usuario_id}")
